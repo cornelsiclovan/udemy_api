@@ -64,17 +64,21 @@ class ResetPasswordAction
             )
         );
 
+        // After password change, old tokens are still valid
+        $data->setPasswordChangeDate(time());
+
+
         $this->entityManager->flush();
 
         $token = $this->tokenManager->create($data);
 
         return new JsonResponse(['token' => $token]);
 
-        //return $data;
+        // return $data;
 
-        //Validator is only called after we return the data from this action!
-        //Only here it checks for the current password, but we've modified it!
+        // Validator is only called after we return the data from this action!
+        // Only here it checks for the current password, but we've modified it!
 
-        //Entity is persisted automatically, only if validation pass
+        // Entity is persisted automatically, only if validation pass
     }
 }
