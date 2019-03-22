@@ -38,7 +38,8 @@ use App\Controller\ResetPasswordAction;
  *              "controller"=ResetPasswordAction::class,
  *              "denormalization_context"={
  *                  "groups"={"put-reset-password"}
- *              }
+ *              },
+ *              "validation_groups"={"put-reset-password"}
  *          }
  *      },
  *     collectionOperations={
@@ -48,7 +49,8 @@ use App\Controller\ResetPasswordAction;
  *              },
  *              "normalization_context"={
  *                  "groups"={"get"}
- *              }
+ *              },
+ *              "validation_groups"={"post"}
  *          }
  *     },
  * )
@@ -107,28 +109,29 @@ class User implements UserInterface
 
     /**
      * @Groups({"put-reset-password"})
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(groups={"put-reset-password"})
      * @Assert\Regex(
      *     pattern="/(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{7,}/",
-     *     message="Password is at least seven characters long and contain at least one digit, one uppercase letter and one lowercase letter! "
+     *     message="Password is at least seven characters long and contain at least one digit, one uppercase letter and one lowercase letter! ",
      * )
      */
     private $newPassword;
 
     /**
      * @Groups({"put-reset-password"})
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(groups={"put-reset-password"})
      * @Assert\Expression(
      *     "this.getNewPassword() === this.getNewRetypedPassword()",
      *     message="Password does not match",
+     *     groups={"put-reset-password"}
      * )
      */
     private $newRetypedPassword;
 
     /**
      * @Groups({"put-reset-password"})
-     * @Assert\NotBlank()
-     * @UserPassword()
+     * @Assert\NotBlank(groups={"put-reset-password"})
+     * @UserPassword(groups={"put-reset-password"})
      */
     private $oldPassword;
 
@@ -173,11 +176,23 @@ class User implements UserInterface
      */
     private $passwordChangeDate;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $enabled;
+
+    /**
+     * @ORM\Column(type="string", length=40, nullable=true)
+     */
+    private $confirmationToken;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->roles = self::DEFAULT_ROLES;
+        $this->enabled = false;
+        $this->confirmationToken = null;
     }
 
     public function getId(): ?int
@@ -347,5 +362,28 @@ class User implements UserInterface
         $this->passwordChangeDate = $passwordChangeDate;
     }
 
+    public function getEnabled()
+    {
+        return $this->enabled;
+    }
 
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+    }
+
+    public function getConfirmationToken()
+    {
+        return $this->confirmationToken;
+    }
+
+    public function setConfirmationToken($confirmationToken)
+    {
+        $this->confirmationToken = $confirmationToken;
+    }
+
+    public function __toString(): string
+    {
+        return $this->name;
+    }
 }

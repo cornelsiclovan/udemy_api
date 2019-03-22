@@ -10,6 +10,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
+ *     attributes={
+ *          "order"={"published": "DESC"},
+ *          "pagination_client_enabled"=true,
+ *          "pagination_client_items_per_page"=true
+ *     },
  *     itemOperations={
  *      "get",
  *      "put"={
@@ -103,7 +108,7 @@ class Comment implements AuthoredEntityInterface, PublishedDateEntityInterface
     /**
      * @return User
      */
-    public function getAuthor(): User
+    public function getAuthor(): ?User
     {
         return $this->author;
     }
@@ -118,7 +123,7 @@ class Comment implements AuthoredEntityInterface, PublishedDateEntityInterface
         return $this;
     }
 
-    public function getBlogPost(): BlogPost
+    public function getBlogPost(): ?BlogPost
     {
         return $this->blogPost;
     }
@@ -128,5 +133,10 @@ class Comment implements AuthoredEntityInterface, PublishedDateEntityInterface
         $this->blogPost = $blogPost;
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return substr($this->content, 0, 20).'...';
     }
 }
