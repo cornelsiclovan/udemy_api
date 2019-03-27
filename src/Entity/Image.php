@@ -20,7 +20,7 @@ use App\Controller\UploadImageAction;
  * @ApiResource(
  *      attributes={
  *          "order"={"id": "ASC"},
- *          "formats"={"json", "jsonld", "form"={"multipart/form-data"}}
+ *          "formats"={"json", "jsonld", "form"={"multipart/form-data"}},
  *     },
  *      collectionOperations={
             "get",
