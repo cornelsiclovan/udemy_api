@@ -13,7 +13,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     attributes={
  *          "order"={"published": "DESC"},
  *          "pagination_client_enabled"=true,
- *          "pagination_client_items_per_page"=true
+ *          "pagination_client_items_per_page"=false,
+ *          "maximum_items_per_page"=30
  *     },
  *     itemOperations={
  *      "get",
@@ -24,7 +25,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     collectionOperations={
  *      "get",
  *      "post"={
- *              "access_control"="is_granted('ROLE_COMMENTATOR')"
+ *              "access_control"="is_granted('ROLE_COMMENTATOR')",
+ *              "normalization_context"={
+ *                  "groups"={"get-comment-with-author"}
+ *              }
  *       },
  *       "api_blog_posts_comments_get_subresource"={
  *              "normalization_context"={

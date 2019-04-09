@@ -19,7 +19,7 @@ class TokenAuthenticator extends JWTTokenAuthenticator
     /**
      * @param PreAuthenticationJWTUserToken $preAuthToken
      * @param UserProviderInterface $userProvider
-     * @return null|UserInterface|void
+     * @return UserInterface
      */
     public function getUser($preAuthToken, UserProviderInterface $userProvider)
     {
